@@ -101,11 +101,3 @@ buffer.edge_colour = property_int['color.base01']
 property['color.red'] = property['color.base08']
 property['color.green'] = property['color.base0B']
 
-
--- Other settings
-buffer.view_ws            = buffer.WS_VISIBLEALWAYS
-buffer.use_tabs           = true
-buffer.wrap_visual_flags  = buffer.WRAPVISUALFLAGLOC_START_BY_TEXT
-buffer.wrap_mode          = buffer.WRAP_WHITESPACE
-buffer.extra_ascent				= 0
-buffer.extra_descent 			= 3
