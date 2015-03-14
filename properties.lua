@@ -70,7 +70,7 @@ buffer.buffered_draw = not CURSES and not OSX -- Quartz buffers drawing on OSX
 
 -- Tabs and Indentation Guides.
 -- Note: tab and indentation settings apply to individual buffers.
-buffer.tab_width = 2
+buffer.tab_width = 4
 buffer.use_tabs = true
 --buffer.indent = 2
 buffer.tab_indents = true
@@ -166,5 +166,5 @@ buffer.wrap_visual_flags  = buffer.WRAPVISUALFLAGLOC_START_BY_TEXT
 --buffer.wrap_start_indent =
 
 -- Long Lines.
---buffer.edge_mode = not CURSES and buffer.EDGE_LINE or buffer.EDGE_BACKGROUND
---buffer.edge_column = 80
+buffer.edge_mode = not CURSES and buffer.EDGE_LINE or buffer.EDGE_BACKGROUND
+buffer.edge_column = 80
