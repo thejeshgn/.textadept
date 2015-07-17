@@ -1,4 +1,4 @@
--- Copyright 2007-2014 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2007-2015 Mitchell mitchell.att.foicica.com. See LICENSE.
 
 local M = {}
 
@@ -9,8 +9,6 @@ local M = {}
 --
 -- ## Key Bindings
 --
--- + `Ctrl+L, M` (`⌘L, M` on Mac OSX | `M-L, M` in curses)
---   Open this module for editing.
 -- + `Shift+Enter` (`⇧↩` | `S-Enter`)
 --   Try to autocomplete an `if`, `while`, `for`, etc. control structure with
 --   `end`.
@@ -26,14 +24,12 @@ end)
 
 -- Autocompletion and documentation.
 
----[[
 ---
 -- List of "fake" ctags files to use for autocompletion.
 -- In addition to the normal ctags kinds for Ruby, the kind 'C' is recognized as
 -- a constant and 'a' as an attribute.
 -- @class table
 -- @name tags
--- @see textadept.editing.autocomplete
 M.tags = {_HOME..'/modules/ruby/tags', _USERHOME..'/modules/ruby/tags'}
 
 ---
@@ -102,7 +98,6 @@ textadept.editing.autocompleters.ruby = function()
   end
   return #part, list
 end
---]]
 
 textadept.editing.api_files.ruby = {
   _HOME..'/modules/ruby/api', _USERHOME..'/modules/ruby/api'
@@ -153,7 +148,7 @@ events.connect(events.FILE_AFTER_SAVE, function()
     local dir, filename = buffer.filename:match('^(.+[/\\])([^/\\]+)$')
     dir, filename = dir:gsub('\\', '\\\\'), filename:gsub('\\', '\\\\')
     local p = io.popen('ruby -C"'..dir..'" -c "'..filename..'" 2>&1')
-    local out = p:read('*all')
+    local out = p:read('*a')
     p:close()
     if not out:match('^Syntax OK') then
       local line, err_msg = out:match('^[^:]+:(%d+): (.+)\r?\n$')
@@ -209,7 +204,7 @@ function M.toggle_block()
           local block, r = block:gsub('^(%s*|[^|]*|)', '%1'..newline)
           if r == 0 then block = newline..block end
           buffer:begin_undo_action()
-          buffer.target_start, buffer.target_end = s, p + 1
+          buffer:set_target_range(s, p + 1)
           buffer:replace_target('do'..block..newline..'end')
           local indent = line_indentation[line]
           line_indentation[line + 1] = indent + buffer.tab_width
@@ -227,7 +222,7 @@ function M.toggle_block()
   if r > 0 then
     -- Single-line do ... end block.
     buffer:begin_undo_action()
-    buffer.target_start, buffer.target_end = buffer:position_from_line(line), e
+    buffer:set_target_range(buffer:position_from_line(line), e)
     buffer:replace_target(block)
     buffer:goto_pos(pos - 1)
     buffer:end_undo_action()
@@ -251,7 +246,7 @@ function M.toggle_block()
   block = buffer:text_range(s2, e2):match('^do(.+)end$')
   block = block:gsub('[\r\n]+', ' '):gsub(' +', ' ')
   buffer:begin_undo_action()
-  buffer.target_start, buffer.target_end = s2, e2
+  buffer:set_target_range(s2, e2)
   buffer:replace_target('{'..block..'}')
   buffer:end_undo_action()
 end
@@ -261,9 +256,6 @@ end
 -- @class table
 -- @name _G.keys.ruby
 keys.ruby = {
-  [keys.LANGUAGE_MODULE_PREFIX] = {
-    m = {io.open_file, _HOME..'/modules/ruby/init.lua'},
-  },
   ['s\n'] = M.try_to_autocomplete_end,
   ['c{'] = M.toggle_block,
 }
