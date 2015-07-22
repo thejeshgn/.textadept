@@ -22,7 +22,7 @@ M.CHECK_SYNTAX = true
 -- Sets default buffer properties for Python files.
 events.connect(events.LEXER_LOADED, function(lang)
   if lang == 'python' then
-    buffer.use_tabs = false
+    buffer.use_tabs = true
     buffer.tab_width = 4
   end
 end)

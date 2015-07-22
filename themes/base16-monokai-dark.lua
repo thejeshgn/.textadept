@@ -25,7 +25,7 @@ property['color.base0E'] = 0xff81ae
 property['color.base0F'] = 0x3366cc
 
 -- Default font.
-property['font'], property['fontsize'] = 'Anonymous Pro, Noto Sans Kannada', 14
+property['font'], property['fontsize'] = 'Anonymous Pro, Noto Sans Kannada', 12
 
 -- Predefined styles.
 property['style.default']       = 'font:%(font),size:%(fontsize),'..'fore:%(color.base05),back:%(color.base00)'
