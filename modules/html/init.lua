@@ -1,4 +1,4 @@
--- Copyright 2007-2014 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2007-2015 Mitchell mitchell.att.foicica.com. See LICENSE.
 
 local M = {}
 
@@ -6,11 +6,6 @@ local M = {}
 ---
 -- The html module.
 -- It provides utilities for editing HTML code.
---
--- ## Key Bindings
---
--- + `Ctrl+L, M` (`⌘L, M` on Mac OSX | `M-L, M` in curses)
---   Open this module for editing.
 module('_M.html')]]
 
 -- Load CSS Autocompletion and documentation.
@@ -322,11 +317,7 @@ textadept.editing.api_files.html = {_HOME..'/modules/html/api'}
 -- Container for HTML-specific key bindings.
 -- @class table
 -- @name _G.keys.html
-keys.html = {
-  [keys.LANGUAGE_MODULE_PREFIX] = {
-    m = {io.open_file, _HOME..'/modules/html/init.lua'},
-  },
-}
+keys.html = {}
 
 -- Snippets.
 

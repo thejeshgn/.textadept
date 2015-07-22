@@ -2,7 +2,7 @@
  * lyaml.h, libyaml parser binding for Lua
  * Written by Gary V. Vaughan, 2013
  *
- * Copyright (c) 2013-2014 Gary V. Vaughan
+ * Copyright (c) 2013-2015 Gary V. Vaughan
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,13 @@
 #include <lauxlib.h>
 
 #include "lyaml.h"
-#include "lua52compat.h"
 
+#if LUA_VERSION_NUM == 502 || LUA_VERSION_NUM == 503
+#  define lua_objlen lua_rawlen
+#  define lua_strlen lua_rawlen
+#  define luaL_openlib(L,n,l,nup) luaL_setfuncs((L),(l),(nup))
+#  define luaL_register(L,n,l) (luaL_newlib(L,l))
+#endif
 
 #ifndef STREQ
 #define STREQ !strcmp

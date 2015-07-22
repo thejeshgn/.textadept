@@ -1,4 +1,4 @@
-# Copyright 2014 Mitchell mitchell.att.foicica.com. See LICENSE.
+# Copyright 2014-2015 Mitchell mitchell.att.foicica.com. See LICENSE.
 
 ifeq (win32, $(findstring win32, $(MAKECMDGOALS)))
   CROSS = i686-w64-mingw32-
@@ -30,21 +30,24 @@ all: $(target)
 win32: lua.la $(target) ../libyamljit.dll
 osx: $(target)
 
+ta_src = /home/mitchell/code/textadept/src
+
 $(yaml_objs): %.o: %.c
 	$(CROSS)$(CC) -c $(CFLAGS) -DHAVE_CONFIG_H -I. $< -o $@
 $(lua_objs): %.o: %.c
-	$(CROSS)$(CC) -c $(CFLAGS) $(LUA_CFLAGS) -I. -I../../../src/lua/src $< -o $@
-$(luajit_objs): %jit.o: %.c
-	$(CROSS)$(CC) -c $(CFLAGS) $(LUA_CFLAGS) -I. -I../../../src/luajit/src $< -o \
+	$(CROSS)$(CC) -c $(CFLAGS) $(LUA_CFLAGS) -I. -I$(ta_src)/lua/src $< -o \
 		$@
+$(luajit_objs): %jit.o: %.c
+	$(CROSS)$(CC) -c $(CFLAGS) $(LUA_CFLAGS) -I. -I$(ta_src)/luajit/src $< \
+		-o $@
 $(target): $(yaml_objs) $(lua_objs)
 	$(CROSS)$(CC) $(CFLAGS) -shared -o $@ $^ $(LDFLAGS)
 lua.def:
 	echo LIBRARY \"textadept.exe\" > $@ && echo EXPORTS >> $@
-	tail -n +2 ../../../src/lua.sym >> $@
+	grep -v "^#" $(ta_src)/lua.sym >> $@
 lua.la: lua.def
 	$(CROSS)dlltool -d $< -l $@
 ../libyamljit.dll: $(yaml_objs) $(luajit_objs)
-	$(CROSS)$(CC) -shared -o $@ $^ -L../../../src/ -llua51
+	$(CROSS)$(CC) -shared -o $@ $^ -L$(ta_src) -llua51
 clean:
 	rm -f *.o

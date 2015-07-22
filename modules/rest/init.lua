@@ -1,4 +1,4 @@
--- Copyright 2007-2014 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2007-2015 Mitchell mitchell.att.foicica.com. See LICENSE.
 
 local M = {}
 
@@ -9,11 +9,9 @@ local M = {}
 --
 -- ## Key Bindings
 --
--- + `Ctrl+L, M` (`⌘L, M` on Mac OSX | `M-L, M` in curses)
---   Open this module for editing.
--- + `Ctrl+L, G` (`⌘L, G` | `M-L, G`)
+-- + `Ctrl+Alt+J` (`^⌘J` | `M-S-J`)
 --   Jump to the selected section.
--- + `Ctrl+L, O` (`⌘L, O` | `M-L, O`)
+-- + `Shift+Enter` (`⇧↩` | `S-Enter`)
 --   Open the image specified by the directive on the current line.
 --
 -- @field DOCUTILS_PATH (string)
@@ -210,6 +208,7 @@ end)
 ---
 -- Prompts the user to select a section title to jump to.
 -- Requires the entire document to be styled.
+-- @name goto_section
 function M.goto_section()
   if buffer.end_styled < buffer.length - 1 then
     buffer:colourise(0, buffer.length - 1)
@@ -233,6 +232,7 @@ end
 ---
 -- Opens the image specified in an "image" or "figure" directive on the current
 -- line.
+-- @name open_image
 function M.open_image()
   local line = buffer:get_cur_line()
   local file = line:match('^%s*%.%. image::%s+(%S+)') or
@@ -252,11 +252,8 @@ end
 -- @class table
 -- @name _G.keys.rest
 keys.rest = {
-  [keys.LANGUAGE_MODULE_PREFIX] = {
-    m = {io.open_file, _HOME..'/modules/rest/init.lua'},
-    g = M.goto_section,
-    o = M.open_image,
-  }
+  [not OSX and 'cag' or 'cmg'] = M.goto_section,
+  ['s\n'] = M.open_image,
 }
 
 -- Snippets.

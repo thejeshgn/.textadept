@@ -1,4 +1,4 @@
--- Copyright 2007-2014 Mitchell mitchell.att.foicica.com. See LICENSE.
+-- Copyright 2007-2015 Mitchell mitchell.att.foicica.com. See LICENSE.
 
 local M = {}
 
@@ -9,8 +9,8 @@ local M = {}
 --
 -- ## Key Bindings
 --
--- + `Ctrl+L, M` (`⌘L, M` on Mac OSX | `M-L, M` in curses)
---   Open this module for editing.
+-- + `Shift+Enter` (`⇧↩` | `S-Enter`)
+--   Add ':' to the end of the current line and insert a newline.
 -- @field CHECK_SYNTAX (bool)
 --   Whether or not to invoke Python to check the syntax of the current file
 --   when saving it.
@@ -33,7 +33,6 @@ end)
 -- List of ctags files to use for autocompletion.
 -- @class table
 -- @name tags
--- @see textadept.editing.autocomplete
 M.tags = {_HOME..'/modules/python/tags', _USERHOME..'/modules/python/tags'}
 
 ---
@@ -149,7 +148,7 @@ events.connect(events.FILE_AFTER_SAVE, function()
   local python3 = version >= '2.7.4' -- 2.7.4 has backported Python3 message
   p:close()
   p = io.popen(python..' -m py_compile "'..buffer.filename..'" 2>&1')
-  local out = p:read('*all')
+  local out = p:read('*a')
   p:close()
   if out:match(python3 and '^%s*File' or '^SyntaxError') then
     local line = out:match(python3 and '^%s*File ".-", line (%d+)' or
@@ -177,9 +176,6 @@ end)
 -- @class table
 -- @name _G.keys.python
 keys.python = {
-  [keys.LANGUAGE_MODULE_PREFIX] = {
-    m = {io.open_file, _HOME..'/modules/python/init.lua'},
-  },
   ['s\n'] = function()
     buffer:line_end()
     buffer:add_text(':')
